@@ -16,10 +16,25 @@ namespace Lab2Test
         {
             Mock<ISentimentProvider> mockSentimentProvider = new Mock<ISentimentProvider>();
             Mock<IStockProvider> mockStockProvider = new Mock<IStockProvider>();
-            APIController apiCtrlr = new APIController(mockSentimentProvider.Object, mockStockProvider.Object);
+            APIController APIController = new APIController(mockSentimentProvider.Object, mockStockProvider.Object);
 
-            Stock stock = new Stock();
-            Assert.Equal("error", apiCtrlr.StockData(2));
+            Stock stock = new Stock
+            {
+                Id = 1,
+                Name = "Microsoft",
+                Liquidity = 1.8,
+                Price = 80,
+                Price200DayAverage = 87
+            };
+
+            mockStockProvider.Setup(x => x.GetStockById(It.IsAny<int>())).Returns(stock);
+            mockSentimentProvider.Setup(x => x.GetSentiment(It.IsAny<string>())).Returns(Sentiment.positive);
+
+            APIController.AutoTrade(1);
+
+
+            mockStockProvider.Verify(m => m.AutoTrade(1), Times.Once());
+            //Assert.Equal("\"error\":\"No trade\"}", APIController.AutoTrade(2));
         }
 
         [Fact]

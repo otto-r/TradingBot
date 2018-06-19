@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Lab2_Core2Test.Models;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using TradingBot_Lab2.Models;
 using TradingBot_Lab2.Controllers;
@@ -28,7 +25,7 @@ namespace Lab2_Core2Test.Controllers
         }
 
         [HttpGet]
-        [Route("autoTrade")]
+        [Route("autoTrade/{id}")]
         public async Task<IActionResult> AutoTrade(int id)
         {
             Stock stockFromDb = _stockProvider.GetStockById(id);
@@ -45,9 +42,25 @@ namespace Lab2_Core2Test.Controllers
                 stockOrder.NumberOfStocks = 10;
                 var tradeOrder = new
                 {
-                    test = stockOrder.Id
+                    stockOrder = stockOrder.ToString()
                 };
-                    //stockOrder = stockOrder.ToString()
+                _stockProvider.AutoTrade(id);
+                return Ok(tradeOrder);
+            }
+            if (trade == TradeDecision.noTrade)
+            {
+                return Ok(new { error = "No trade" });
+            }
+            if (trade == TradeDecision.shortSell || trade == TradeDecision.strongShortSell)
+            {
+                stockOrder.Id = 1;
+                stockOrder.Stock = stockFromDb;
+                stockOrder.NumberOfStocks = -10;
+                var tradeOrder = new
+                {
+                    stockOrder = stockOrder.ToString()
+                };
+                _stockProvider.AutoTrade(id);
                 return Ok(tradeOrder);
             }
 
