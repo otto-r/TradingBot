@@ -14,7 +14,7 @@ namespace Lab2_Core2Test.Models
             _sentimentProvider = sentimentProvider ?? throw new ArgumentNullException(nameof(sentimentProvider));
         }
 
-        public TradeDecision Trade(Stock stock)
+        public TradeDecision TradeEvaluation(Stock stock)
         {
             if (double.IsNaN(stock.Liquidity) || stock.Liquidity <= 0)
             {

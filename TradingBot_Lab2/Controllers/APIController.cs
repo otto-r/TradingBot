@@ -8,6 +8,8 @@ using Lab2_Core2Test.Models;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using TradingBot_Lab2.Models;
+using TradingBot_Lab2.Controllers;
 
 namespace Lab2_Core2Test.Controllers
 {
@@ -17,11 +19,12 @@ namespace Lab2_Core2Test.Controllers
     public class APIController : Controller
     {
         private readonly ISentimentProvider _sentimentProvider;
+        private readonly IStockProvider _stockProvider;
 
-
-        public APIController(ISentimentProvider sentimentProvider)
+        public APIController(ISentimentProvider sentimentProvider, IStockProvider stockProvider)
         {
             _sentimentProvider = sentimentProvider;
+            _stockProvider = stockProvider;
         }
 
         // GET: api/<controller>
@@ -50,7 +53,7 @@ namespace Lab2_Core2Test.Controllers
             };
 
             var TradingBot = new TradingBot(_sentimentProvider);
-            var trade = TradingBot.Trade(stock);
+            var trade = TradingBot.TradeEvaluation(stock);
 
             var tradeOrder = trade.ToString();
 
@@ -60,19 +63,20 @@ namespace Lab2_Core2Test.Controllers
         }
 
         [HttpGet]
-        [Route("stockData/test")]
-        public async Task<IActionResult> StockDataTest()
+        [Route("getSentiment")]
+        public async Task<IActionResult> StockDataTest(Stock stock)
         {
-            Stock stock = new Stock()
-            {
-                Name = "Microsoft",
-                Liquidity = 1.1,
-                Price = 100,
-                Price200DayAverage = 99
-            };
+            List<Stock> stockList = StockList.GetStockList();
+            //Stock stock = new Stock()
+            //{
+            //    Name = "Microsoft",
+            //    Liquidity = 1.1,
+            //    Price = 100,
+            //    Price200DayAverage = 99
+            //};
 
             var TradingBot = new TradingBot(_sentimentProvider);
-            var trade = TradingBot.Trade(stock);
+            var trade = TradingBot.TradeEvaluation(stock);
 
             var tradeOrder = new
             {
@@ -84,17 +88,30 @@ namespace Lab2_Core2Test.Controllers
             return Ok(tradeOrder);
         }
 
+        //List<Stock> stockList = StockList.GetStockList();
+        [HttpGet]
+        [Route("stockInfo/{id}")]
+        public async Task<IActionResult> StockInfo(int id)
+        {
+            Stock stockFromDb = _stockProvider.GetStockById(id);
+
+            var Stock = new
+            {
+                stockFromDb.Name,
+                stockFromDb.Liquidity,
+                stockFromDb.Price,
+                stockFromDb.Price200DayAverage
+
+            };
+
+            return Ok(Stock);
+        }
 
 
 
 
         //-------------------------------------------------------------------------------------
         // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/<controller>
         [HttpPost]
@@ -113,5 +130,7 @@ namespace Lab2_Core2Test.Controllers
         public void Delete(int id)
         {
         }
+
+
     }
 }

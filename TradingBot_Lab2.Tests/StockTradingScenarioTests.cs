@@ -23,7 +23,7 @@ namespace Lab2Test
                 Price = 100,
                 Price200DayAverage = 67
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.noTrade, decision);
         }
@@ -44,7 +44,7 @@ namespace Lab2Test
                 Price = 9,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.strongBuy, decision);
         }
@@ -65,7 +65,7 @@ namespace Lab2Test
                 Price = 9,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.buy, decision);
         }
@@ -86,7 +86,7 @@ namespace Lab2Test
                 Price = 9,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.noTrade, decision);
         }
@@ -107,7 +107,7 @@ namespace Lab2Test
                 Price = 11,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.strongShortSell, decision);
         }
@@ -128,7 +128,7 @@ namespace Lab2Test
                 Price = 11,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.shortSell, decision);
         }
@@ -149,7 +149,7 @@ namespace Lab2Test
                 Price = 10,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.shortSell, decision);
         }
@@ -170,7 +170,7 @@ namespace Lab2Test
                 Price = 11,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.noTrade, decision);
         }
@@ -191,7 +191,7 @@ namespace Lab2Test
                 Price = 10,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.buy, decision);
         }
@@ -212,7 +212,7 @@ namespace Lab2Test
                 Price = 10,
                 Price200DayAverage = 10
             };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.noTrade, decision);
         }
@@ -227,7 +227,7 @@ namespace Lab2Test
             var tradingBot = new TradingBot(mockSentimentProvider.Object);
 
             var Stock = new Stock { };
-            var decision = tradingBot.Trade(Stock);
+            var decision = tradingBot.TradeEvaluation(Stock);
 
             Assert.Equal(TradeDecision.error, decision);
         }
