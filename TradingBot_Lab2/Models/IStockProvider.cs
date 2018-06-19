@@ -7,7 +7,7 @@ namespace TradingBot_Lab2.Models
     {
         IEnumerable<Stock> GetAllStocks();
         Stock GetStockById(int id);
-        StockOrder StockOrder();
+        StockOrder StockOrder(int id);
         StockOrder AutoTrade(int id);
     }
 }

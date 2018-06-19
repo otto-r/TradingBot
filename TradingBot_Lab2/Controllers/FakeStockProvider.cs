@@ -30,9 +30,24 @@ namespace Lab2_Core2Test.Controllers
             return new Stock { Id = 100, Liquidity = 1.1, Name = "FakeStock", Price = 10, Price200DayAverage = 1 };
         }
 
-        StockOrder IStockProvider.StockOrder()
+        StockOrder IStockProvider.StockOrder(int id)
         {
-            throw new NotImplementedException();
+            return new StockOrder
+            {
+                Id = 1,
+                Stock = new Stock
+                {
+                    Id = 100,
+                    Liquidity = 1.1,
+                    Name = "FakeStock",
+                    Price = 10,
+                    Price200DayAverage = 1
+                },
+                NumberOfStocks = 1
+            };
         }
     }
 }
+
+
+

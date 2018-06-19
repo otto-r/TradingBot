@@ -27,39 +27,31 @@ namespace Lab2_Core2Test.Controllers
             _stockProvider = stockProvider;
         }
 
-        // GET: api/<controller>
         [HttpGet]
-        [Route("get")]
-        public async Task<IActionResult> Get()
+        [Route("autoTrade")]
+        public async Task<IActionResult> AutoTrade(int id)
         {
-            var json = new
-            {
-                test = "test"
-            };
-
-            return Ok(json);
-        }
-
-        [HttpGet]
-        [Route("stockData")]
-        public string StockData(int id)
-        {
-            var stock = new Stock
-            {
-                Name = "Microsoft",
-                Liquidity = 1.1,
-                Price = 100,
-                Price200DayAverage = 99
-            };
+            Stock stockFromDb = _stockProvider.GetStockById(id);
 
             var TradingBot = new TradingBot(_sentimentProvider);
-            var trade = TradingBot.TradeEvaluation(stock);
+            var trade = TradingBot.TradeEvaluation(stockFromDb);
 
-            var tradeOrder = trade.ToString();
+            StockOrder stockOrder = new StockOrder();
 
+            if (trade == TradeDecision.buy || trade == TradeDecision.strongBuy)
+            {
+                stockOrder.Id = 1;
+                stockOrder.Stock = stockFromDb;
+                stockOrder.NumberOfStocks = 10;
+                var tradeOrder = new
+                {
+                    test = stockOrder.Id
+                };
+                    //stockOrder = stockOrder.ToString()
+                return Ok(tradeOrder);
+            }
 
-            //var json = JsonConvert.SerializeObject(stock);
-            return tradeOrder;
+            return Ok(new { error = "error" });
         }
 
         [HttpGet]
@@ -67,13 +59,6 @@ namespace Lab2_Core2Test.Controllers
         public async Task<IActionResult> StockDataTest(Stock stock)
         {
             List<Stock> stockList = StockList.GetStockList();
-            //Stock stock = new Stock()
-            //{
-            //    Name = "Microsoft",
-            //    Liquidity = 1.1,
-            //    Price = 100,
-            //    Price200DayAverage = 99
-            //};
 
             var TradingBot = new TradingBot(_sentimentProvider);
             var trade = TradingBot.TradeEvaluation(stock);
@@ -82,8 +67,6 @@ namespace Lab2_Core2Test.Controllers
             {
                 trade = trade.ToString()
             };
-
-            // var json = JsonConvert.SerializeObject(trade.ToString());
 
             return Ok(tradeOrder);
         }
@@ -107,30 +90,23 @@ namespace Lab2_Core2Test.Controllers
             return Ok(Stock);
         }
 
-
-
-
-        //-------------------------------------------------------------------------------------
-        // GET api/<controller>/5
-
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpGet]
+        [Route("orderStock/{id}")]
+        public async Task<IActionResult> StockOrder(int id)
         {
-        }
+            Stock stockFromDb = _stockProvider.GetStockById(id);
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+            var stockOrderFromProvider = _stockProvider.StockOrder(id);
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+            var stockOrder = new
+            {
+                stockOrderFromProvider.Id,
+                stockOrderFromProvider.NumberOfStocks,
+                stockOrderFromProvider.Stock
+            };
 
+            return Ok(stockOrder);
+        }
 
     }
 }

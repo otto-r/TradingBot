@@ -34,7 +34,17 @@ namespace Lab2Test
             mockStockProvider.Verify(m => m.GetStockById(1), Times.Once());
         }
 
+        [Fact]
+        public void APIController_PlaceStockOrder()
+        {
+            Mock<ISentimentProvider> mockSentimentProvider = new Mock<ISentimentProvider>();
+            Mock<IStockProvider> mockStockProvider = new Mock<IStockProvider>();
+            APIController APIController = new APIController(mockSentimentProvider.Object, mockStockProvider.Object);
 
+            APIController.StockOrder(2);
+
+            mockStockProvider.Verify(m => m.StockOrder(2), Times.Once());
+        }
 
         [Fact]
         public void LowLiquidity_Returns_NoTrade()
