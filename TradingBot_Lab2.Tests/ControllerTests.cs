@@ -12,7 +12,7 @@ namespace Lab2Test
     {
 
         [Fact]
-        public void InvalidParameter_Returns_Error()
+        public void APIController_AutoTrade_CallsAutoTrade_Successful()
         {
             Mock<ISentimentProvider> mockSentimentProvider = new Mock<ISentimentProvider>();
             Mock<IStockProvider> mockStockProvider = new Mock<IStockProvider>();
@@ -32,9 +32,7 @@ namespace Lab2Test
 
             APIController.AutoTrade(1);
 
-
             mockStockProvider.Verify(m => m.AutoTrade(1), Times.Once());
-            //Assert.Equal("\"error\":\"No trade\"}", APIController.AutoTrade(2));
         }
 
         [Fact]
@@ -80,10 +78,6 @@ namespace Lab2Test
 
             var tradingBot = new TradingBot(mockSentimentProvider.Object);
             var decision = tradingBot.TradeEvaluation(stock);
-
-           
-
-           
         }
     }
 }
